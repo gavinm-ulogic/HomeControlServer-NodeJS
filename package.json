@@ -1,0 +1,24 @@
+{
+  "name": "homecontrolserver",
+  "version": "0.1.0",
+  "description": "",
+  "main": "app/server.js",
+  "dependencies": {
+    "@types/node": "^6.0.51",
+    "@types/serialport": "^4.0.6",
+    "body-parser": "*",
+    "cors": "^2.8.1",
+    "ds1820-temp": "^1.0.0",
+    "express": "*"
+  },
+  "devDependencies": {
+    "concurrently": "*"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "tsc && concurrently \"tsc -w\"",
+    "start": "tsc && node app/server.js"
+  },
+  "author": "Gavin Mitchell",
+  "license": "ISC"
+}
