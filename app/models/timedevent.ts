@@ -63,4 +63,14 @@ export class TimedEvent {
         return false;
     }
 
+    public update(data: TimedEvent): TimedEvent {
+        this.description = data.description;
+        this.isGroup = data.isGroup;
+        this.subjectId = data.subjectId;
+        this.timeEnd = data.timeEnd;
+        this.timeStart = data.timeStart;
+        this.type = data.type     
+        return this;
+    }
+
 }

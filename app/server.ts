@@ -31,6 +31,7 @@ router.use(function(req, res, next) {
     // do logging
     console.log('API request received.');
 
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
@@ -59,12 +60,13 @@ router.route('/groups/:groupId')
     .get(function(req, res) { heatingController.getGroupById(req, res) });
 
 router.route('/events')
+    .post(function(req, res) { heatingController.createEvent(req, res) })
     .get(function(req, res) { heatingController.getAllEvents(req, res) });
 
 router.route('/events/:eventId')
-    .post(function(req, res) { heatingController.addEvent(req, res) })
     .put(function(req, res) { heatingController.updateEvent(req, res) })
-    .get(function(req, res) { heatingController.getEventById(req, res) });
+    .get(function(req, res) { heatingController.getEventById(req, res) })
+    .delete(function(req, res) { heatingController.deleteEvent(req, res) });
 
 router.route('/sensors')
     .get(function(req, res) { heatingController.getAllSensors(req, res) });

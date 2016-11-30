@@ -1,5 +1,6 @@
 "use strict";
 var heatingservice_1 = require('../services/heatingservice');
+var timedevent_1 = require('../models/timedevent');
 var HeatingController = (function () {
     function HeatingController() {
         this.heatingService = heatingservice_1.HeatingService.getInstance();
@@ -19,6 +20,11 @@ var HeatingController = (function () {
             console.log("HeatingController.getGroupById");
             res.json(this.heatingService.getGroupById(req.params.groupId));
         };
+        this.createEvent = function (req, res) {
+            console.log("HeatingController.createEvent");
+            var newEvent = new timedevent_1.TimedEvent(req.body);
+            res.json(this.heatingService.createEvent(newEvent));
+        };
         this.getAllEvents = function (req, res) {
             console.log("HeatingController.getAllEvents");
             res.json(this.heatingService.getAllEvents());
@@ -26,6 +32,15 @@ var HeatingController = (function () {
         this.getEventById = function (req, res) {
             console.log("HeatingController.getEventById");
             res.json(this.heatingService.getEventById(req.params.sensorId));
+        };
+        this.updateEvent = function (req, res) {
+            console.log("HeatingController.updateEvent");
+            var newEvent = new timedevent_1.TimedEvent(req.body);
+            res.json(this.heatingService.updateEvent(newEvent));
+        };
+        this.deleteEvent = function (req, res) {
+            console.log("HeatingController.deleteEvent");
+            res.json(this.heatingService.deleteEvent(req.params.eventId));
         };
         this.getAllSensors = function (req, res) {
             console.log("HeatingController.getAllSensors");

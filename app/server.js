@@ -24,6 +24,7 @@ var router = express.Router(); // get an instance of the express Router
 router.use(function (req, res, next) {
     // do logging
     console.log('API request received.');
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next(); // make sure we go to the next routes and don't stop here
@@ -44,11 +45,12 @@ router.route('/groups/:groupId')
     .post(function (req, res) { })
     .get(function (req, res) { heatingController.getGroupById(req, res); });
 router.route('/events')
+    .post(function (req, res) { heatingController.createEvent(req, res); })
     .get(function (req, res) { heatingController.getAllEvents(req, res); });
 router.route('/events/:eventId')
-    .post(function (req, res) { heatingController.addEvent(req, res); })
     .put(function (req, res) { heatingController.updateEvent(req, res); })
-    .get(function (req, res) { heatingController.getEventById(req, res); });
+    .get(function (req, res) { heatingController.getEventById(req, res); })
+    .delete(function (req, res) { heatingController.deleteEvent(req, res); });
 router.route('/sensors')
     .get(function (req, res) { heatingController.getAllSensors(req, res); });
 router.route('/sensors/:sensorId')

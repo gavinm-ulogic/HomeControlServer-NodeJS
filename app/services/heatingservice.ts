@@ -18,6 +18,9 @@ export class HeatingService {
     public floorHeatActive = true;
     public towelRadsActive = true;
 
+    public nextGroupId = 1;
+    public nextEventId = 1;
+
     private static _instance: HeatingService = null;
 
     constructor() {
@@ -35,90 +38,6 @@ export class HeatingService {
         return HeatingService._instance;
     }
 
-    private processSubData() {
-        // Add heaters to rooms
-        for (let i = 0; i < this.heatingData.floorHeats.length; i++)
-        {
-            for (let j = 0; j < this.heatingData.rooms.length; j++)
-            {
-                if (this.heatingData.rooms[j].id == this.heatingData.floorHeats[i].roomId)
-                {
-                    if (!this.heatingData.rooms[j].heaters) { this.heatingData.rooms[j].heaters = []; }
-                    this.heatingData.rooms[j].heaters.push(this.heatingData.floorHeats[i]);
-                    break;
-                }
-            }
-        }
-        for (let i = 0; i < this.heatingData.towelRads.length; i++)
-        {
-            for (let j = 0; j < this.heatingData.rooms.length; j++)
-            {
-                if (this.heatingData.rooms[j].id == this.heatingData.towelRads[i].roomId)
-                {
-                    if (!this.heatingData.rooms[j].heaters) { this.heatingData.rooms[j].heaters = []; }
-                    this.heatingData.rooms[j].heaters.push(this.heatingData.towelRads[i]);
-                    break;
-                }
-            }
-        }
-
-        // Add sensors to rooms and heaters
-        for (let i = 0; i < this.heatingData.roomSensors.length; i++)
-        {
-            for (let j = 0; j < this.heatingData.rooms.length; j++)
-            {
-                if (this.heatingData.rooms[j].id == this.heatingData.roomSensors[i].roomId)
-                {
-                    if (!this.heatingData.rooms[j].sensors) { this.heatingData.rooms[j].sensors = []; }
-                    this.heatingData.rooms[j].sensors.push(this.heatingData.roomSensors[i]);
-                    if (this.heatingData.rooms[j].heaters) {
-                        for (let k = 0; k < this.heatingData.rooms[j].heaters.length; k++)
-                        {
-                            if (!this.heatingData.rooms[j].heaters[k].sensors) { this.heatingData.rooms[j].heaters[k].sensors = []; }
-                            this.heatingData.rooms[j].heaters[k].sensors.push(this.heatingData.roomSensors[i]);
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-        for (let i = 0; i < this.heatingData.floorSensors.length; i++)
-        {
-            for (let j = 0; j < this.heatingData.rooms.length; j++)
-            {
-                if (this.heatingData.rooms[j].id == this.heatingData.floorSensors[i].roomId)
-                {
-                    if (!this.heatingData.rooms[j].sensors) { this.heatingData.rooms[j].sensors = []; }
-                    this.heatingData.rooms[j].sensors.push(this.heatingData.floorSensors[i]);
-                    if (this.heatingData.rooms[j].heaters) {
-                        for (let k = 0; k < this.heatingData.rooms[j].heaters.length; k++)
-                        {
-                            if (!this.heatingData.rooms[j].heaters[k].sensors) { this.heatingData.rooms[j].heaters[k].sensors = []; }
-                            this.heatingData.rooms[j].heaters[k].sensors.push(this.heatingData.floorSensors[i]);
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-
-            // // Clear and then populate relay set
-            // Relay oRelay;
-            // theData.theRelays.Clear();
-            // for (int i = 0; i < this.heatingData.floorHeats.length; i++)
-            // {
-            //     oRelay = new Relay(this.heatingData.floorHeats[i].Name, this.heatingData.floorHeats[i].RelayAddress);
-            //     theData.theRelays.Add(oRelay);
-            // }
-            // for (int i = 0; i < this.heatingData.towelRads.length; i++)
-            // {
-            //     oRelay = new Relay(this.heatingData.towelRads[i].Name, this.heatingData.towelRads[i].RelayAddress);
-            //     theData.theRelays.Add(oRelay);
-            // }
-            // theData.theRelays.Sort();
-
-    };
-
     public loadFromFile() {
         let self = this;
         FS.readFile(this.DATAFILE, "", function(err, data) {
@@ -126,28 +45,13 @@ export class HeatingService {
                 console.log("HeatingService.loadFromFile: " + err.message);
             } else {
                 self.heatingData.loadData(data);
-                // console.log("HeatingService.loadFromFile: " + data);
-                // let loadedData: any = JSON.parse(data);
-                // self.heatingData.groups = loadedData.groups;
-                // self.heatingData.rooms = loadedData.rooms;
-                // self.heatingData.floorHeats = loadedData.floorHeats;
-                // self.heatingData.towelRads = loadedData.towelRads;
-                // self.heatingData.roomSensors = loadedData.roomSensors;
-                // self.heatingData.floorSensors = loadedData.floorSensors;
-                // self.heatingData.events = loadedData.events;
-                // self.heatingData.relays = loadedData.relays;
 
-                // self.heatingData.groups = loadedData.HeatingData.theGroups.EventGroup;
-                // self.heatingData.rooms = loadedData.HeatingData.theRooms.Room;
-                // self.heatingData.floorHeats = loadedData.HeatingData.theFloorHeats.Heater;
-                // self.heatingData.towelRads = loadedData.HeatingData.theTowelRads.Heater;
-                // self.heatingData.roomSensors = loadedData.HeatingData.theRoomSensors.Sensor;
-                // self.heatingData.floorSensors = loadedData.HeatingData.theFloorSensors.Sensor;
-                // self.heatingData.events = loadedData.HeatingData.theEvents.TimedEvent;
-                // self.heatingData.relays = loadedData.HeatingData.theRelays.Relay;
-                //self.saveToFile();
-
-                //self.processSubData();      // Heaters & Sensors sub-objects not saved to the data file
+                for(let eventGroup of self.heatingData.groups) {
+                    if (eventGroup.id >= self.nextGroupId) { self.nextGroupId = eventGroup.id + 1; }
+                } 
+                for(let timedEvent of self.heatingData.events) {
+                    if (timedEvent.id >= self.nextEventId) { self.nextEventId = timedEvent.id + 1; }
+                } 
             }
         });
     }
@@ -168,7 +72,7 @@ export class HeatingService {
         return this.heatingData.rooms;
     }
 
-    public getRoomById = function(roomId: string) {
+    public getRoomById(roomId: number) {
         for (let room of this.heatingData.rooms) {
             if (room.id == roomId) { return room; }
         }
@@ -186,15 +90,34 @@ export class HeatingService {
         return null;
     }
 
-    public getAllEvents() {
+    public createEvent(timedEvent: TimedEvent): TimedEvent {
+        timedEvent.id = this.nextEventId;
+        this.nextEventId++;
+        this.heatingData.events.push(timedEvent);
+        return timedEvent;
+    }
+
+    public getAllEvents(): TimedEvent[] {
         return this.heatingData.events;
     }
 
-    public getEventById(eventId: number) {
+    public getEventById(eventId: number): TimedEvent {
         for (let event of this.heatingData.events) {
             if (event.id == eventId) { return event; }
         }
         return null;
+    }
+
+    public updateEvent(timedEvent: TimedEvent): TimedEvent {
+        let updateEvent = this.getEventById(timedEvent.id);
+        if (!updateEvent) { return null; };
+        return updateEvent.update(timedEvent); 
+    }
+
+    public deleteEvent(timedEvent: TimedEvent) {
+        for (let i in this.heatingData.events) {
+            if (this.heatingData.events[i].id == timedEvent.id) { this.heatingData.events.splice(parseInt(i), 1); }
+        }
     }
 
     public getAllSensors() {
@@ -208,16 +131,15 @@ export class HeatingService {
         return null;
     }
 
-    public deleteEvent(timedEvent: TimedEvent) {
-        for (let i in this.heatingData.events) {
-            if (this.heatingData.events[i].id == timedEvent.id) { this.heatingData.events.splice(parseInt(i), 1); }
-        }
-    }
-
     public updateTempSensors(sensors) {
         for (let sensor of sensors) {
             let foundSensor = this.heatingData.getTempSensor(sensor.name);
-            if (foundSensor) { foundSensor.reading = sensor.value; }
+            if (foundSensor) {
+                let currentTime = new Date();
+                foundSensor.lastRead = currentTime; 
+                if (sensor.value != foundSensor.reading) { foundSensor.lastChange = currentTime; } 
+                foundSensor.reading = sensor.value;
+            }
         }
     }
 

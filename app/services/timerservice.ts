@@ -55,7 +55,7 @@ export class TimerService {
                 self.runLoop();
             }, TimerService.LOOPDELAY);
             self.doHeating();
-            //this.heatingService.saveToFile();
+            this.heatingService.saveToFile();
         }
     }
 

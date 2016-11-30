@@ -50,6 +50,15 @@ var TimedEvent = (function () {
         }
         return false;
     };
+    TimedEvent.prototype.update = function (data) {
+        this.description = data.description;
+        this.isGroup = data.isGroup;
+        this.subjectId = data.subjectId;
+        this.timeEnd = data.timeEnd;
+        this.timeStart = data.timeStart;
+        this.type = data.type;
+        return this;
+    };
     TimedEvent.eventType = {
         HEAT: 1,
         FALLBACK: 2,

@@ -35,6 +35,7 @@ var TimerService = (function () {
                 self.runLoop();
             }, TimerService.LOOPDELAY);
             self.doHeating();
+            this.heatingService.saveToFile();
         }
     };
     TimerService.prototype.kill = function () {

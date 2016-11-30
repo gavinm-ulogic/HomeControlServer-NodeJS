@@ -1,4 +1,5 @@
 import { HeatingService } from '../services/heatingservice';
+import { TimedEvent } from '../models/timedevent';
 
 export class HeatingController {
 
@@ -26,6 +27,12 @@ export class HeatingController {
         res.json(this.heatingService.getGroupById(req.params.groupId));
     };
 
+    public createEvent = function(req, res) {
+        console.log("HeatingController.createEvent");
+        let newEvent = new TimedEvent(req.body);
+        res.json(this.heatingService.createEvent(newEvent));
+    };
+
     public getAllEvents = function(req, res) {
         console.log("HeatingController.getAllEvents");
         res.json(this.heatingService.getAllEvents());
@@ -34,6 +41,17 @@ export class HeatingController {
     public getEventById = function(req, res) {
         console.log("HeatingController.getEventById");
         res.json(this.heatingService.getEventById(req.params.sensorId));
+    };
+
+    public updateEvent = function(req, res) {
+        console.log("HeatingController.updateEvent");
+        let newEvent = new TimedEvent(req.body);
+        res.json(this.heatingService.updateEvent(newEvent));
+    };
+
+    public deleteEvent = function(req, res) {
+        console.log("HeatingController.deleteEvent");
+        res.json(this.heatingService.deleteEvent(req.params.eventId));
     };
 
     public getAllSensors = function(req, res) {
