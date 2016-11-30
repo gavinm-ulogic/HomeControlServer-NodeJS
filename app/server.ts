@@ -44,33 +44,34 @@ router.get('/', function(req, res) {
 
 // api routes
 
+router.route('/rooms')
+    .get(function(req, res) { heatingController.getAllRooms(req, res) });
+
 router.route('/rooms/:roomId')
     .post(function(req, res) {})   // create a room
-    .get(function(req, res) { heatingController.getRoomById(req, res) });   // get room by id
-
-router.route('/rooms')
-    .get(function(req, res) { heatingController.getAllRooms(req, res) });   // get all the rooms
-
-router.route('/groups/:groupId')
-    .post(function(req, res) {})    // create a group
-    .get(function(req, res) { heatingController.getGroupById(req, res) });    // get group by id
+    .get(function(req, res) { heatingController.getRoomById(req, res) });
 
 router.route('/groups')
-    .get(function(req, res) { heatingController.getAllGroups(req, res) });    // get all the groups
+    .get(function(req, res) { heatingController.getAllGroups(req, res) });
 
-router.route('/events/:eventId')
-    .post(function(req, res) {})    // create a event
-    .get(function(req, res) { heatingController.getEventById(req, res) });    // get event by id
+router.route('/groups/:groupId')
+    .post(function(req, res) {})
+    .get(function(req, res) { heatingController.getGroupById(req, res) });
 
 router.route('/events')
-    .get(function(req, res) { heatingController.getAllEvents(req, res) });    // get all the events
+    .get(function(req, res) { heatingController.getAllEvents(req, res) });
+
+router.route('/events/:eventId')
+    .post(function(req, res) { heatingController.addEvent(req, res) })
+    .put(function(req, res) { heatingController.updateEvent(req, res) })
+    .get(function(req, res) { heatingController.getEventById(req, res) });
+
+router.route('/sensors')
+    .get(function(req, res) { heatingController.getAllSensors(req, res) });
 
 router.route('/sensors/:sensorId')
     .post(function(req, res) {})    // create a sensor
-    .get(function(req, res) { heatingController.getSensorById(req, res) });    // get sensor by id
-
-router.route('/sensors')
-    .get(function(req, res) { heatingController.getAllSensors(req, res) });    // get all the sensors
+    .get(function(req, res) { heatingController.getSensorById(req, res) });
 
 // REGISTER THE ROUTES -------------------------------
 // all of the routes will be prefixed with /api
