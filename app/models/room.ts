@@ -7,7 +7,7 @@ export class Room {
     id: number;
     name: string;
     sensors: Sensor[];
-    tempCurrent: number;
+    //tempCurrent: number;
     tempTarget: number;
     tempMin: number;
     tempMax: number;
@@ -17,7 +17,7 @@ export class Room {
             this.groupId = parseInt(data.groupId);
             this.id = parseInt(data.id);
             this.name = data.name;
-            this.tempCurrent = parseInt(data.tempCurrent);
+            //this.tempCurrent = parseInt(data.tempCurrent);
             this.tempTarget = parseInt(data.tempTarget);
             this.tempMin = parseInt(data.tempMin);
             this.tempMax = parseInt(data.tempMax);

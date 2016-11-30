@@ -9,7 +9,8 @@
     "body-parser": "*",
     "cors": "^2.8.1",
     "ds1820-temp": "^1.0.0",
-    "express": "*"
+    "express": "*",
+    "serialport": "^4.0.6"
   },
   "devDependencies": {
     "concurrently": "*"
