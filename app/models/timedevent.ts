@@ -17,7 +17,7 @@ export class TimedEvent {
     public timeStartStr: string;
     public type: number;
 
-    constructor(data) {
+    constructor(data: any) {
         if (data) {
             this.description = data.description;
             this.id = parseInt(data.id);

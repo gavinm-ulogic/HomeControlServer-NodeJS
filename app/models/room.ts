@@ -7,17 +7,15 @@ export class Room {
     id: number;
     name: string;
     sensors: Sensor[];
-    //tempCurrent: number;
     tempTarget: number;
     tempMin: number;
     tempMax: number;
 
-    constructor(data, floorheaters, towelrads, sensors) {
+    constructor(data: any, floorheaters?: Heater[], towelrads?: Heater[], sensors?: Sensor[]) {
         if (data) {
             this.groupId = parseInt(data.groupId);
             this.id = parseInt(data.id);
             this.name = data.name;
-            //this.tempCurrent = parseInt(data.tempCurrent);
             this.tempTarget = parseInt(data.tempTarget);
             this.tempMin = parseInt(data.tempMin);
             this.tempMax = parseInt(data.tempMax);
@@ -43,4 +41,14 @@ export class Room {
             }
         }
     }    
+
+    public update(data: Room): Room {
+        this.groupId = data.groupId;
+        this.name = data.name;
+        this.tempTarget = data.tempTarget;
+        this.tempMin = data.tempMin;
+        this.tempMax = data.tempMax;
+        return this;
+    }
+
 }

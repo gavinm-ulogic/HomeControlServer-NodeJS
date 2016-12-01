@@ -1,6 +1,7 @@
 "use strict";
 var heatingservice_1 = require('../services/heatingservice');
 var timedevent_1 = require('../models/timedevent');
+var room_1 = require('../models/room');
 var HeatingController = (function () {
     function HeatingController() {
         this.heatingService = heatingservice_1.HeatingService.getInstance();
@@ -11,6 +12,11 @@ var HeatingController = (function () {
         this.getRoomById = function (req, res) {
             console.log("HeatingController.getRoomById");
             res.json(this.heatingService.getRoomById(req.params.roomId));
+        };
+        this.updateRoom = function (req, res) {
+            console.log("HeatingController.updateRoom");
+            var newRoom = new room_1.Room(req.body);
+            res.json(this.heatingService.updateRoom(newRoom));
         };
         this.getAllGroups = function (req, res) {
             console.log("HeatingController.getAllGroups");

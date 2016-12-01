@@ -58,12 +58,14 @@ export class HeatingData {
         console.log("HeatingData.loadData done");
     }
 
-    public getTempSensor(id: string): Sensor {
+    public getSensorBySensorId(sensorId: string): Sensor {
+        let testStart = (sensorId.length == 12) ? 2 : 0;
+        let testLen = (sensorId.length == 12) ? 12 : undefined;
         for (let sensor of this.roomSensors) { 
-            if (sensor.sensorId.substr(2, 12).toUpperCase() == id.toUpperCase()) { return sensor; } 
+            if (sensor.sensorId.substr(testStart, testLen).toUpperCase() == sensorId.toUpperCase()) { return sensor; } 
         }
         for (let sensor of this.floorSensors) { 
-            if (sensor.sensorId.substr(2, 12).toUpperCase() == id.toUpperCase()) { return sensor; } 
+            if (sensor.sensorId.substr(testStart, testLen).toUpperCase() == sensorId.toUpperCase()) { return sensor; } 
         }
         return null;
     }

@@ -11,7 +11,7 @@ export class Heater {
     tempMax: number;
     type: number;
 
-    constructor(data, sensors) {
+    constructor(data: any, sensors?: Sensor[]) {
         if (data) {
             this.groupId = parseInt(data.groupId);
             this.id = parseInt(data.id);

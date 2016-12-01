@@ -37,12 +37,12 @@ router.get('/', function (req, res) {
 router.route('/rooms')
     .get(function (req, res) { heatingController.getAllRooms(req, res); });
 router.route('/rooms/:roomId')
-    .post(function (req, res) { }) // create a room
+    .put(function (req, res) { heatingController.updateRoom(req, res); })
     .get(function (req, res) { heatingController.getRoomById(req, res); });
+//.delete(function(req, res) { heatingController.deleteRoom(req, res) });
 router.route('/groups')
     .get(function (req, res) { heatingController.getAllGroups(req, res); });
 router.route('/groups/:groupId')
-    .post(function (req, res) { })
     .get(function (req, res) { heatingController.getGroupById(req, res); });
 router.route('/events')
     .post(function (req, res) { heatingController.createEvent(req, res); })
@@ -54,7 +54,6 @@ router.route('/events/:eventId')
 router.route('/sensors')
     .get(function (req, res) { heatingController.getAllSensors(req, res); });
 router.route('/sensors/:sensorId')
-    .post(function (req, res) { }) // create a sensor
     .get(function (req, res) { heatingController.getSensorById(req, res); });
 // REGISTER THE ROUTES -------------------------------
 // all of the routes will be prefixed with /api

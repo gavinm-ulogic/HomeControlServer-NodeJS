@@ -1,7 +1,7 @@
 import * as FS from 'fs';
 import { HeatingData } from '../models/heatingdata';
 // import { EventGroup } from '../models/eventgroup';
-// import { Room } from '../models/room';
+import { Room } from '../models/room';
 // import { Heater } from '../models/heater';
 // import { Sensor } from '../models/sensor';
 import { TimedEvent } from '../models/timedevent';
@@ -79,6 +79,12 @@ export class HeatingService {
         return null;
     }
 
+    public updateRoom(room: Room): Room {
+        let theRoom = this.getRoomById(room.id);
+        if (!theRoom) { return null; };
+        return theRoom.update(room); 
+    }
+
     public getAllGroups() {
         return this.heatingData.groups;
     }
@@ -133,7 +139,7 @@ export class HeatingService {
 
     public updateTempSensors(sensors) {
         for (let sensor of sensors) {
-            let foundSensor = this.heatingData.getTempSensor(sensor.name);
+            let foundSensor = this.heatingData.getSensorBySensorId(sensor.name);
             if (foundSensor) {
                 let currentTime = new Date();
                 let roundTemp = Math.round(sensor.value);

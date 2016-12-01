@@ -1,5 +1,6 @@
 import { HeatingService } from '../services/heatingservice';
 import { TimedEvent } from '../models/timedevent';
+import { Room } from '../models/room';
 
 export class HeatingController {
 
@@ -15,6 +16,12 @@ export class HeatingController {
     public getRoomById = function(req, res) {
         console.log("HeatingController.getRoomById");
         res.json(this.heatingService.getRoomById(req.params.roomId));
+    };
+
+    public updateRoom = function(req, res) {
+        console.log("HeatingController.updateRoom");
+        let newRoom = new Room(req.body);
+        res.json(this.heatingService.updateRoom(newRoom));
     };
 
     public getAllGroups = function(req, res) {

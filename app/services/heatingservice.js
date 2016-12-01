@@ -71,6 +71,14 @@ var HeatingService = (function () {
         }
         return null;
     };
+    HeatingService.prototype.updateRoom = function (room) {
+        var theRoom = this.getRoomById(room.id);
+        if (!theRoom) {
+            return null;
+        }
+        ;
+        return theRoom.update(room);
+    };
     HeatingService.prototype.getAllGroups = function () {
         return this.heatingData.groups;
     };
@@ -131,7 +139,7 @@ var HeatingService = (function () {
     HeatingService.prototype.updateTempSensors = function (sensors) {
         for (var _i = 0, sensors_1 = sensors; _i < sensors_1.length; _i++) {
             var sensor = sensors_1[_i];
-            var foundSensor = this.heatingData.getTempSensor(sensor.name);
+            var foundSensor = this.heatingData.getSensorBySensorId(sensor.name);
             if (foundSensor) {
                 var currentTime = new Date();
                 var roundTemp = Math.round(sensor.value);

@@ -5,7 +5,6 @@ var Room = (function () {
             this.groupId = parseInt(data.groupId);
             this.id = parseInt(data.id);
             this.name = data.name;
-            //this.tempCurrent = parseInt(data.tempCurrent);
             this.tempTarget = parseInt(data.tempTarget);
             this.tempMin = parseInt(data.tempMin);
             this.tempMax = parseInt(data.tempMax);
@@ -37,6 +36,14 @@ var Room = (function () {
             }
         }
     }
+    Room.prototype.update = function (data) {
+        this.groupId = data.groupId;
+        this.name = data.name;
+        this.tempTarget = data.tempTarget;
+        this.tempMin = data.tempMin;
+        this.tempMax = data.tempMax;
+        return this;
+    };
     return Room;
 }());
 exports.Room = Room;

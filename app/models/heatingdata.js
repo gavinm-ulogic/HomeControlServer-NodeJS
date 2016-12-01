@@ -57,16 +57,18 @@ var HeatingData = (function () {
         }
         console.log("HeatingData.loadData done");
     };
-    HeatingData.prototype.getTempSensor = function (id) {
+    HeatingData.prototype.getSensorBySensorId = function (sensorId) {
+        var testStart = (sensorId.length == 12) ? 2 : 0;
+        var testLen = (sensorId.length == 12) ? 12 : undefined;
         for (var _i = 0, _a = this.roomSensors; _i < _a.length; _i++) {
             var sensor = _a[_i];
-            if (sensor.sensorId.substr(2, 12).toUpperCase() == id.toUpperCase()) {
+            if (sensor.sensorId.substr(testStart, testLen).toUpperCase() == sensorId.toUpperCase()) {
                 return sensor;
             }
         }
         for (var _b = 0, _c = this.floorSensors; _b < _c.length; _b++) {
             var sensor = _c[_b];
-            if (sensor.sensorId.substr(2, 12).toUpperCase() == id.toUpperCase()) {
+            if (sensor.sensorId.substr(testStart, testLen).toUpperCase() == sensorId.toUpperCase()) {
                 return sensor;
             }
         }
