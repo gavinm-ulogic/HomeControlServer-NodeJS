@@ -60,13 +60,13 @@ var HeatingData = (function () {
     HeatingData.prototype.getTempSensor = function (id) {
         for (var _i = 0, _a = this.roomSensors; _i < _a.length; _i++) {
             var sensor = _a[_i];
-            if (sensor.sensorId.substr(2, 12) == id) {
+            if (sensor.sensorId.substr(2, 12).toUpperCase() == id.toUpperCase()) {
                 return sensor;
             }
         }
         for (var _b = 0, _c = this.floorSensors; _b < _c.length; _b++) {
             var sensor = _c[_b];
-            if (sensor.sensorId.substr(2, 12) == id) {
+            if (sensor.sensorId.substr(2, 12).toUpperCase() == id.toUpperCase()) {
                 return sensor;
             }
         }

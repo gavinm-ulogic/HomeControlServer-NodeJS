@@ -136,9 +136,10 @@ export class HeatingService {
             let foundSensor = this.heatingData.getTempSensor(sensor.name);
             if (foundSensor) {
                 let currentTime = new Date();
+                let roundTemp = Math.round(sensor.value);
                 foundSensor.lastRead = currentTime; 
-                if (sensor.value != foundSensor.reading) { foundSensor.lastChange = currentTime; } 
-                foundSensor.reading = sensor.value;
+                if (roundTemp != foundSensor.reading) { foundSensor.lastChange = currentTime; } 
+                foundSensor.reading = roundTemp;
             }
         }
     }

@@ -59,8 +59,12 @@ export class HeatingData {
     }
 
     public getTempSensor(id: string): Sensor {
-        for (let sensor of this.roomSensors) { if (sensor.sensorId.substr(2, 12) == id) { return sensor; } }
-        for (let sensor of this.floorSensors) { if (sensor.sensorId.substr(2, 12) == id) { return sensor; } }
+        for (let sensor of this.roomSensors) { 
+            if (sensor.sensorId.substr(2, 12).toUpperCase() == id.toUpperCase()) { return sensor; } 
+        }
+        for (let sensor of this.floorSensors) { 
+            if (sensor.sensorId.substr(2, 12).toUpperCase() == id.toUpperCase()) { return sensor; } 
+        }
         return null;
     }
 }

@@ -134,11 +134,12 @@ var HeatingService = (function () {
             var foundSensor = this.heatingData.getTempSensor(sensor.name);
             if (foundSensor) {
                 var currentTime = new Date();
+                var roundTemp = Math.round(sensor.value);
                 foundSensor.lastRead = currentTime;
-                if (sensor.value != foundSensor.reading) {
+                if (roundTemp != foundSensor.reading) {
                     foundSensor.lastChange = currentTime;
                 }
-                foundSensor.reading = sensor.value;
+                foundSensor.reading = roundTemp;
             }
         }
     };
