@@ -1,5 +1,6 @@
 import { HeatingService } from '../services/heatingservice';
 let oneWire = require('ds1820-temp');
+// var usb = require('usb')
 
 export class OneWireService {
 
@@ -24,12 +25,26 @@ export class OneWireService {
 
     public readAll() {
         let self = this;
+
+        // // idVendor: 1274, idProduct: 9360
+        // var testUsb = usb.getDeviceList();
+        // for (let device of testUsb) {
+        //     console.log("USB device: busNumber: " + device.busNumber 
+        //     + ", deviceAddress: " + device.deviceAddress 
+        //     + ", idVendor: " + device.deviceDescriptor.idVendor + ", idProduct: " + device.deviceDescriptor.idProduct);
+        // }
+
         // promise based
         return oneWire.readDevices().then(function (devices) {
             //console.log('Read all devices', devices);
-            self.heatingService.updateTempSensors(devices);
+            if (devices) {
+                console.log('OneWire.readAll device count: ' + devices.length);
+                self.heatingService.updateTempSensors(devices);
+            } else {
+                console.log('OneWire.readAll no devices found');
+            } 
         }, function (err) {
-            console.log('An error occurred', err);
+            console.log('OneWire.readAll error: ', err);
         });
     }
 

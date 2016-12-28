@@ -1,6 +1,7 @@
 "use strict";
 var heatingservice_1 = require('../services/heatingservice');
 var oneWire = require('ds1820-temp');
+var usb = require('usb');
 var OneWireService = (function () {
     function OneWireService() {
         this.heatingService = heatingservice_1.HeatingService.getInstance();
@@ -17,12 +18,25 @@ var OneWireService = (function () {
     };
     OneWireService.prototype.readAll = function () {
         var self = this;
+        // // idVendor: 1274, idProduct: 9360
+        // var testUsb = usb.getDeviceList();
+        // for (let device of testUsb) {
+        //     console.log("USB device: busNumber: " + device.busNumber 
+        //     + ", deviceAddress: " + device.deviceAddress 
+        //     + ", idVendor: " + device.deviceDescriptor.idVendor + ", idProduct: " + device.deviceDescriptor.idProduct);
+        // }
         // promise based
         return oneWire.readDevices().then(function (devices) {
             //console.log('Read all devices', devices);
-            self.heatingService.updateTempSensors(devices);
+            if (devices) {
+                console.log('OneWire.readAll device count: ' + devices.length);
+                self.heatingService.updateTempSensors(devices);
+            }
+            else {
+                console.log('OneWire.readAll no devices found');
+            }
         }, function (err) {
-            console.log('An error occurred', err);
+            console.log('OneWire.readAll error: ', err);
         });
     };
     OneWireService.prototype.run = function () {

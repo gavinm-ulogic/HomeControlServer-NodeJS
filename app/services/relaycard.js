@@ -22,6 +22,9 @@ var RelayCardService = (function () {
     RelayCardService.prototype.sendCommand = function (commandByte, addressByte, dataByte, callback) {
         var self = this;
         var waitTime = 100;
+        if (!callback || self.doInitialise) {
+            var yyy = 0;
+        }
         if (self.doInitialise) {
             self.initialise();
             waitTime = 4000;
@@ -187,7 +190,8 @@ var RelayCardService = (function () {
         }, 10000);
         self.setCardRelays(1, self.setupRelays[1], function () {
             self.setCardRelays(2, self.setupRelays[2], function () {
-                self.setCardRelays(3, self.setupRelays[3], null);
+                self.setCardRelays(3, self.setupRelays[3], function () {
+                });
             });
         });
     };

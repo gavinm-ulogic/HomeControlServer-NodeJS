@@ -38,7 +38,6 @@ export class RelayCardService {
         let self = this;
         let waitTime = 100;
         if (self.doInitialise) { self.initialise(); waitTime = 4000; }
-
         setTimeout(function() {
             let sendBuffer = new Buffer([commandByte, addressByte, dataByte, addressByte ^ commandByte ^ dataByte]);
             console.log("RelayCardService.sendCommand: command: " + sendBuffer[0] + ", card: " + sendBuffer[1] + ", data: " + sendBuffer[2] + ", xor: " + sendBuffer[3]);        
@@ -232,7 +231,8 @@ export class RelayCardService {
         }, 10000);
         self.setCardRelays(1, self.setupRelays[1], function() {
             self.setCardRelays(2, self.setupRelays[2], function() {
-                self.setCardRelays(3, self.setupRelays[3], null);            
+                self.setCardRelays(3, self.setupRelays[3], function() {   
+                });            
             });
         });
     }

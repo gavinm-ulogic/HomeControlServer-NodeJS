@@ -10,6 +10,8 @@ import { TimedEvent } from '../models/timedevent';
 export class HeatingService {
 
     public static HOLIDAYDELTA = -5;
+    public static ERRORTEMP = 99;
+
     private OLDFILE = "./appdata.json";
     private DATAFILE = "./heatingdata.json";
 
@@ -137,17 +139,57 @@ export class HeatingService {
         return null;
     }
 
+    private getMinutesOfDay(date: Date) {
+        return date.getHours() * 60 + date.getMinutes();
+    }
+
     public updateTempSensors(sensors) {
         for (let sensor of sensors) {
             let foundSensor = this.heatingData.getSensorBySensorId(sensor.name);
             if (foundSensor) {
                 let currentTime = new Date();
+
                 let roundTemp = Math.round(sensor.value);
-                foundSensor.lastRead = currentTime; 
-                if (roundTemp != foundSensor.reading) { foundSensor.lastChange = currentTime; } 
+                if (roundTemp > 60 || roundTemp < -60 || ( roundTemp === 0 && foundSensor.reading > 5)) {
+                    roundTemp = foundSensor.reading;            // Invalid reading, keep same temp but don't update last read
+                } else {                                        // Valid reading
+                    foundSensor.lastRead = currentTime;
+                    if (roundTemp != foundSensor.reading) { foundSensor.lastChange = currentTime; } 
+                }
                 foundSensor.reading = roundTemp;
+
+
+                // let roundTemp = (sensor.value < 60) ? Math.round(sensor.value) : foundSensor.reading;
+                // if (roundTemp > 60 || roundTemp < -60) { roundTemp = 16; }
+                // if (roundTemp === 0 && foundSensor.reading > 5) { roundTemp = 99; }
+                // foundSensor.lastRead = currentTime;
+                // if (roundTemp != foundSensor.reading) { foundSensor.lastChange = currentTime; } 
+                //foundSensor.reading = roundTemp;
+            }
+            let logStr = "Sensor " + sensor.name + " value: " + sensor.value;
+            logStr += (foundSensor) ? ", " + foundSensor.name + " previous: " + foundSensor.reading  + " last read: " + foundSensor.lastRead : ", not found";
+            console.log(logStr);
+        }
+
+        // Check if reading is out of date (more than 30 mins old)
+        let currentTime = new Date();
+        console.log("Minutes of day: " + this.getMinutesOfDay(currentTime));
+
+        let errorTemp = (this.getMinutesOfDay(currentTime) < 4 * 60 || this.getMinutesOfDay(currentTime) > 10 * 60) ? HeatingService.ERRORTEMP : 1;
+        let testTime = new Date(currentTime.getTime() - 30*60000);
+        for (let sensor of this.heatingData.roomSensors) {
+            if (sensor.lastRead < testTime) {
+                console.log("Sensor " + sensor.name + " TIMEOUT - last read: " + sensor.lastRead);
+                sensor.reading = errorTemp;
             }
         }
+        for (let sensor of this.heatingData.floorSensors) {
+            if (sensor.lastRead < testTime) {
+                console.log("Sensor " + sensor.name + " TIMEOUT");
+                sensor.reading = errorTemp;
+            }
+        }
+
     }
 
 }

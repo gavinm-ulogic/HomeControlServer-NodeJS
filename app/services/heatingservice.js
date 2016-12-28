@@ -136,22 +136,53 @@ var HeatingService = (function () {
         }
         return null;
     };
+    HeatingService.prototype.getMinutesOfDay = function (date) {
+        return date.getHours() * 60 + date.getMinutes();
+    };
     HeatingService.prototype.updateTempSensors = function (sensors) {
         for (var _i = 0, sensors_1 = sensors; _i < sensors_1.length; _i++) {
             var sensor = sensors_1[_i];
             var foundSensor = this.heatingData.getSensorBySensorId(sensor.name);
             if (foundSensor) {
-                var currentTime = new Date();
+                var currentTime_1 = new Date();
                 var roundTemp = Math.round(sensor.value);
-                foundSensor.lastRead = currentTime;
-                if (roundTemp != foundSensor.reading) {
-                    foundSensor.lastChange = currentTime;
+                if (roundTemp > 60 || roundTemp < -60 || (roundTemp === 0 && foundSensor.reading > 5)) {
+                    roundTemp = foundSensor.reading; // Invalid reading, keep same temp but don't update last read
+                }
+                else {
+                    foundSensor.lastRead = currentTime_1;
+                    if (roundTemp != foundSensor.reading) {
+                        foundSensor.lastChange = currentTime_1;
+                    }
                 }
                 foundSensor.reading = roundTemp;
+            }
+            var logStr = "Sensor " + sensor.name + " value: " + sensor.value;
+            logStr += (foundSensor) ? ", " + foundSensor.name + " previous: " + foundSensor.reading + " last read: " + foundSensor.lastRead : ", not found";
+            console.log(logStr);
+        }
+        // Check if reading is out of date (more than 30 mins old)
+        var currentTime = new Date();
+        console.log("Minutes of day: " + this.getMinutesOfDay(currentTime));
+        var errorTemp = (this.getMinutesOfDay(currentTime) < 4 * 60 || this.getMinutesOfDay(currentTime) > 7 * 60) ? HeatingService.ERRORTEMP : 1;
+        var testTime = new Date(currentTime.getTime() - 30 * 60000);
+        for (var _a = 0, _b = this.heatingData.roomSensors; _a < _b.length; _a++) {
+            var sensor = _b[_a];
+            if (sensor.lastRead < testTime) {
+                console.log("Sensor " + sensor.name + " TIMEOUT - last read: " + sensor.lastRead);
+                sensor.reading = errorTemp;
+            }
+        }
+        for (var _c = 0, _d = this.heatingData.floorSensors; _c < _d.length; _c++) {
+            var sensor = _d[_c];
+            if (sensor.lastRead < testTime) {
+                console.log("Sensor " + sensor.name + " TIMEOUT");
+                sensor.reading = errorTemp;
             }
         }
     };
     HeatingService.HOLIDAYDELTA = -5;
+    HeatingService.ERRORTEMP = 99;
     HeatingService._instance = null;
     return HeatingService;
 }());
